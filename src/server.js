@@ -19,7 +19,7 @@ app.get("/getAllBooks", (request, response) => {
 app.post("/addBook", (request, response) => {
   fakeArr.push(request.body);
   console.log(fakeArr);
-  // response.send({ message: "success", newBook: fakeArr[fakeArr.length - 1] });
+  response.send({ message: "success", newBook: fakeArr[fakeArr.length - 1] });
 });
 
 app.listen(5001, () => {
