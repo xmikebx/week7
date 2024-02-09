@@ -1,78 +1,40 @@
+require("dotenv").config();
+
 const express = require("express");
+const mongoose = require("mongoose");
+const connection = require("./db/connection"); //creating a variable that links to connection.js
+const bookRouter = require("./books/routes"); //creating a variable that links to routes.js
 
 const app = express();
 
-// HTTP Verbs - GET, POST, PUT, DELETE
-
-// const response = await fetch("http://someaddress.com"); // sends GET request
-
-// HTTP Verb GET
-
-const fakeArr = [];
-
 app.use(express.json());
 
-app.get("/books", (request, response) => {
-  console.log("/books: ", request.path);
-  response.send({ message: "success", fakeArr: fakeArr });
-});
+connection(); //this is calling connection.js for the connection information
 
-app.get("/books/getfirstbook", (request, response) => {
-  // get te first book
-  console.log("/books/books: ", request.path);
-  const book = fakeArr[0];
-  response.send({ message: "success", book: book });
-  console.log(book);
-});
+app.use(bookRouter);
 
-app.post("/books", (request, response) => {
-  console.log("title: ", request.body.title);
-  console.log("genre: ", request.body.genre);
-  console.log("author: ", request.body.author);
+/////CREATE_SCHEMA///// moved to model.js
 
-  fakeArr.push(request.body);
+const logTypeOfResult = async (result) => {
+  console.log(`Typeof result: ${typeof result} - result: ${result}`);
+};
 
-  let awesome;
-  for (let i = 0; i < fakeArr.length; i++) {
-    if (fakeArr[i].title === request.body.title) {
-      awesome = "it's awsome";
-    }
-  }
-  console.log(awesome);
-  response.send({ message: "success", newBook: fakeArr[fakeArr.length - 1] });
-});
+/////FIND_ALL///// moved to controllers.js
 
-app.put("/books", (request, response) => {
-  // in here, find a book by title (i.e. an element of fakeArr where the element title is the same as request.body.title)
-  // change (update) the author to an new name
-  let findTitle;
-  for (let i = 0; i < fakeArr.length; i++) {
-    if (fakeArr[i].title === request.query.title) {
-      findTitle = "Title Found!!!";
-    } else {
-      findTitle = "Title not found!!!";
-    }
-  }
-  // console.log(findTitle);
-  response.send({ message: { findTitle } });
-});
+/////FIND_FIRST///// not needed for assignment
 
-app.delete("/books", (request, response) => {
-  // in here, find a book by title (i.e. an element of fakeArr where the element title is the same as request.body.title)
-  // remove (delete) the element from the array
-  let deleteTitle;
-  for (let i = 0; i < fakeArr.length; i++) {
-    if (fakeArr[i].title === request.query.title) {
-      // request.body.title = fakeArr[i].title;
-      deleteTitle = "Title found and Deleted!!!";
-      const index = fakeArr[i];
-      fakeArr.splice(index, 1);
-    } else {
-      deleteTitle = "Title not found!!!";
-    }
-  }
-  response.send({ message: { deleteTitle } });
-});
+// app.get("/books/getfirstbook", async (request, response) => {
+//   const book = await Book.findOne();
+
+//   console.log("Route: ", request.path);
+//   response.send({ message: "first book found", book: book });
+// });
+
+/////CREATE_NEW_BOOK///// moved to controllers.js
+
+/////UPDATE///// moved to controllers.js
+
+/////DELETE///// moved to controllers.js
 
 app.listen(5001, () => {
   console.log("Server is listening on port 5001");
